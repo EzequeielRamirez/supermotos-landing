@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Panel de Leads – Super Motos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E31E24;--navy:#1B3360;--bg:#f5f6f8;--card:#fff;--text:#14181f;--muted:#5b6475;--line:#e3e6ec;--hot:#1aa34a;--warm:#c98200;--cold:#4a6fa5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.4}
+header{background:#fff;border-bottom:1px solid var(--line);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header img{height:40px}header .r{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+button,select,input{font:inherit}
+.btn{border:0;border-radius:10px;padding:9px 14px;background:var(--navy);color:#fff;font-weight:600;cursor:pointer}
+.btn.l{background:#fff;color:var(--navy);border:1px solid var(--line)}
+main{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:22px;font-weight:900;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi span{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.kpi b{display:block;font-size:28px;font-weight:900;margin-top:4px;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.tab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters input,.filters select{border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:#fff;min-width:0;flex:1 1 160px}
+.list{display:grid;gap:10px}
+.lead{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--cold);border-radius:12px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:8px 14px}
+.lead.caliente{border-left-color:var(--hot)}.lead.tibio{border-left-color:var(--warm)}
+.lead h3{font-size:17px;font-weight:800;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:#eef1f6;color:var(--muted)}
+.pill.caliente{background:#e5f7ec;color:var(--hot)}.pill.tibio{background:#fff4dc;color:var(--warm)}.pill.frío{background:#e8eef8;color:var(--cold)}
+.meta{color:var(--muted);font-size:13px}
+.det{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.det span{font-size:13px;background:var(--bg);border-radius:8px;padding:4px 8px}
+.det span.bad{background:#fde8e8;color:var(--red)}
+.act{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.act select{border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fff}
+.note{grid-column:1/-1;border:1px solid var(--line);border-radius:8px;padding:8px;font-size:14px;width:100%}
+.empty{text-align:center;color:var(--muted);padding:40px 0}
+.login{max-width:360px;margin:12vh auto;background:#fff;border-radius:16px;padding:26px;box-shadow:0 10px 30px rgba(20,30,60,.12);text-align:center}
+.login img{height:60px;margin-bottom:14px}.login input{width:100%;border:2px solid var(--line);border-radius:10px;padding:12px;margin:12px 0}
+.login .btn{width:100%;padding:12px}.err{color:var(--red);font-size:14px;min-height:20px}
+.demo{background:#fff4dc;color:#7a5200;border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:14px}
+@media(max-width:560px){.lead{grid-template-columns:1fr}.act{flex-direction:row;align-items:center;justify-content:space-between}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* Misma URL del Apps Script que en index.html. Vacío = modo demo con datos de ejemplo. */
+const LEADS_URL = '';
+
+const root = document.getElementById('root');
+let leads = [], tab = 'calificados', q = '', suc = '', per = '7', clave = '';
+try { clave = localStorage.getItem('sm_clave') || '' } catch(e) {}
+
+const ESTADOS = ['nuevo','contactado','en trámite','vendido','perdido'];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function demo(){
+  const n=['Martín','Lucía','Diego','Sofía','Bruno','Valentina','Agustín','Camila','Nicolás','Florencia','Matías','Carolina'];
+  const r=a=>a[Math.floor(Math.random()*a.length)];
+  return n.map((x,i)=>{const niv=r(['caliente','caliente','tibio','tibio','frío']);return {id:'d'+i,fecha:new Date(Date.now()-i*9e6).toISOString(),nombre:x,nivel:niv,
+    puntaje:niv==='caliente'?16:niv==='tibio'?10:4,tipo:r(['0 km','usada','0 km o usada']),uso:r(['uso diario','herramienta de trabajo','paseo']),
+    pago:r(['contado','tarjeta','financiera']),ingresos:r(['recibo +6m','independiente','sin comprobante','']),clearing:niv==='frío'?'en clearing':r(['al día','']),
+    entrega:r(['entrega +500','sin entrega','']),cuando:r(['esta semana','este mes','mirando']),zona:r(['Cerro / Casabó','Prado / Sayago','GPS (2.1 km de Sucursal Prado)']),
+    sucursal:r(['Sucursal Prado','Sucursal Cerro','Sucursal Cerro 2']),whatsapp:r(['sí','sí','no']),estado:r(['nuevo','nuevo','contactado','vendido']),nota:''}});
+}
+
+function login(msg=''){
+  root.innerHTML=`<div class="login"><img src="logo.jpg" alt="Super Motos"><h2>Panel de leads</h2>
+  <input id="k" type="password" placeholder="Clave" autocomplete="current-password"><div class="err">${msg}</div>
+  <button class="btn" id="go">Entrar</button></div>`;
+  const k=document.getElementById('k');k.focus();
+  const go=()=>{clave=k.value.trim();load()};
+  document.getElementById('go').onclick=go;k.onkeydown=e=>e.key==='Enter'&&go();
+}
+
+async function load(){
+  if(!LEADS_URL){ if(!leads.length) leads=demo(); return draw(); }
+  if(!clave) return login();
+  try{
+    const res=await fetch(`${LEADS_URL}?clave=${encodeURIComponent(clave)}`).then(r=>r.json());
+    if(!res.ok){ try{localStorage.removeItem('sm_clave')}catch(e){} clave=''; return login('Clave incorrecta'); }
+    try{localStorage.setItem('sm_clave',clave)}catch(e){}
+    leads=res.leads.reverse(); draw();
+  }catch(e){ if(!leads.length) login('No se pudo conectar. Probá de nuevo.'); }
+}
+
+const calif = l => l.nivel==='caliente'||l.nivel==='tibio';
+function filtered(){
+  const desde = per==='todo'?0:Date.now()-(+per)*864e5;
+  return leads.filter(l=>new Date(l.fecha).getTime()>=desde)
+    .filter(l=>!suc||l.sucursal===suc)
+    .filter(l=>!q||JSON.stringify(l).toLowerCase().includes(q.toLowerCase()));
+}
+
+function draw(){
+  const base=filtered(), c=base.filter(calif), nc=base.filter(l=>!calif(l));
+  const shown = tab==='calificados'?c:tab==='no'?nc:tab==='vendidos'?base.filter(l=>l.estado==='vendido'):base;
+  const sucs=[...new Set(leads.map(l=>l.sucursal))].sort();
+  const pct=base.length?Math.round(c.length/base.length*100):0;
+  const ventas=base.filter(l=>l.estado==='vendido').length;
+  const sinAtender=c.filter(l=>l.estado==='nuevo').length;
+  const focus=document.activeElement&&document.activeElement.id;
+
+  root.innerHTML=`<header><img src="logo.jpg" alt="Super Motos"><div class="r">
+    <span id="upd">Actualizado ${new Date().toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'})}</span>
+    <button class="btn l" onclick="load()">↻</button>${LEADS_URL?'<button class="btn l" onclick="salir()">Salir</button>':''}</div></header>
+  <main>${LEADS_URL?'':'<div class="demo">Modo demo: datos de ejemplo. Cargá la URL del Apps Script para ver los leads reales.</div>'}
+  <h1>Clientes que entraron</h1>
+  <div class="kpis">
+    <div class="kpi"><span>Total</span><b>${base.length}</b></div>
+    <div class="kpi"><span>Calificados</span><b style="color:var(--hot)">${c.length}</b></div>
+    <div class="kpi"><span>No calificados</span><b style="color:var(--cold)">${nc.length}</b></div>
+    <div class="kpi"><span>% calificados</span><b>${pct}%</b></div>
+    <div class="kpi"><span>Calificados sin atender</span><b style="color:var(--red)">${sinAtender}</b></div>
+    <div class="kpi"><span>Vendidos</span><b>${ventas}</b></div>
+  </div>
+  <div class="tabs">${[['calificados',`✅ Calificados (${c.length})`],['no',`⛔ No calificados (${nc.length})`],['vendidos','💰 Vendidos'],['todos','Todos']]
+    .map(([k,t])=>`<button class="tab ${tab===k?'on':''}" onclick="tab='${k}';draw()">${t}</button>`).join('')}</div>
+  <div class="filters">
+    <input id="q" placeholder="Buscar nombre, zona, modelo…" value="${esc(q)}" oninput="q=this.value;draw()">
+    <select onchange="suc=this.value;draw()"><option value="">Todas las sucursales</option>${sucs.map(s=>`<option ${s===suc?'selected':''}>${esc(s)}</option>`).join('')}</select>
+    <select onchange="per=this.value;draw()">${[['1','Hoy'],['7','Últimos 7 días'],['30','Últimos 30 días'],['todo','Todo']].map(([v,t])=>`<option value="${v}" ${v===per?'selected':''}>${t}</option>`).join('')}</select>
+  </div>
+  <div class="list">${shown.length?shown.map(card).join(''):'<div class="empty">No hay clientes en esta vista.</div>'}</div></main>`;
+  if(focus==='q'){const el=document.getElementById('q');el.focus();el.setSelectionRange(q.length,q.length)}
+}
+
+function card(l){
+  const f=new Date(l.fecha), bad=v=>/clearing|sin comprobante|mirando/.test(v);
+  const det=[['Busca',l.tipo],['Uso',l.uso],['Pago',l.pago],['Ingresos',l.ingresos],['Créditos',l.clearing],['Entrega',l.entrega],['Cuándo',l.cuando],['Zona',l.zona]]
+    .filter(x=>x[1]).map(([k,v])=>`<span class="${bad(v)?'bad':''}">${k}: <b>${esc(v)}</b></span>`).join('');
+  return `<div class="lead ${esc(l.nivel)}">
+    <div><h3>${esc(l.nombre)} <span class="pill ${esc(l.nivel)}">${{caliente:'🔥 Caliente',tibio:'🟡 Tibio','frío':'🔵 Frío'}[l.nivel]||esc(l.nivel)} · ${esc(l.puntaje)}</span></h3>
+    <div class="meta">${f.toLocaleDateString('es-UY')} ${f.toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'})} · ${esc(l.sucursal)} · WhatsApp: ${l.whatsapp==='sí'?'✅ escribió':'❌ no abrió'}</div></div>
+    <div class="act"><select onchange="setEstado('${esc(l.id)}',this.value)">${ESTADOS.map(e=>`<option ${e===l.estado?'selected':''}>${e}</option>`).join('')}</select></div>
+    <div class="det">${det}</div>
+    <input class="note" placeholder="Nota (ej: quiere la GN 125 roja, llamar el lunes)" value="${esc(l.nota)}" onchange="setNota('${esc(l.id)}',this.value)">
+  </div>`;
+}
+
+function save(l){
+  if(!LEADS_URL) return;
+  fetch(LEADS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({accion:'estado',clave,id:l.id,estado:l.estado,nota:l.nota})})
+    .then(r=>r.json()).then(r=>{if(!r.ok)alert('No se pudo guardar: '+r.error)}).catch(()=>alert('No se pudo guardar, revisá la conexión.'));
+}
+function setEstado(id,v){const l=leads.find(x=>x.id==id);l.estado=v;save(l);draw()}
+function setNota(id,v){const l=leads.find(x=>x.id==id);l.nota=v;save(l)}
+function salir(){try{localStorage.removeItem('sm_clave')}catch(e){}clave='';leads=[];login()}
+
+load();
+setInterval(()=>{if(LEADS_URL&&clave&&document.activeElement.tagName!=='INPUT')load()},60000);
+</script>
+</body>
+</html>

@@ -70,6 +70,8 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 40px}
 <footer>Super Motos · Concesionario de motocicletas · Financiación sujeta a aprobación de la financiera o banco.</footer>
 
 <script>
+/* URL del Apps Script (Implementar → Aplicación web). Vacío = no se guardan los leads. */
+const LEADS_URL = '';
 /* ====== CONFIGURACIÓN ======
    Confirmar coordenadas exactas de cada sucursal (Google Maps → clic derecho → copiar coordenadas).
    Para activar Ciudad de la Costa: poner active:true y cargar su WhatsApp. */
@@ -204,12 +206,16 @@ function renderResult(){
   const msg = buildMsg(tier,s);
   const url = `https://wa.me/${b.wa}?text=${encodeURIComponent(msg)}`;
   track(tier,s,b);
+  if(!lead.id){lead.id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    send({accion:'lead',id:lead.id,nombre:lead.nombre,nivel:{A:'caliente',B:'tibio',C:'frío'}[tier],puntaje:s,
+      tipo:A.tipo,uso:A.uso,pago:A.pago,ingresos:A.ingresos||'',clearing:A.clearing||'',entrega:A.entrega||'',
+      cuando:A.cuando,zona:lead.zona,sucursal:b.name});}
 
   app.innerHTML = `<div class="fade"><div class="bar"><i style="width:100%"></i></div>
    <span class="res-tag t-${tier.toLowerCase()}">${tier==='A'?'Pre-calificado ✔':tier==='B'?'Buen perfil':'Te asesoramos'}</span>
    <h2>${title}</h2><p class="hint">${body}</p>${tips.length?`<ul class="tips">${tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}
    <div class="branch">Te atiende: <b>${b.name}</b>${lead.km!=null?` <small>· a ${lead.km.toFixed(1)} km</small>`:''}</div>${costa}
-   <a href="${url}" target="_blank" rel="noopener"><button class="btn wa">💬 Hablar ahora por WhatsApp</button></a>
+   <a href="${url}" target="_blank" rel="noopener" onclick="send({accion:'click',id:lead.id})"><button class="btn wa">💬 Hablar ahora por WhatsApp</button></a>
    <button class="btn ghost" onclick="restart()">Empezar de nuevo</button></div>`;
 }
 function buildMsg(tier,s){
@@ -226,6 +232,10 @@ Zona: ${lead.zona}
 }
 function restart(){for(const k in A)delete A[k];for(const k in S)delete S[k];i=0;hist=[];lead={};render()}
 
+function send(d){
+  if(!LEADS_URL) return;
+  try{fetch(LEADS_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)})}catch(e){}
+}
 /* Tracking: si cargan Meta Pixel / GA4, se envía el evento automáticamente */
 function track(tier,s,b){
   const d={lead_tier:tier,lead_score:s,branch:b.id,payment:A.pago};
