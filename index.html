@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Super Motos – Tu moto hoy</title>
+<meta name="description" content="Encontrá tu moto en Super Motos. Respondé unas preguntas y te conectamos con la sucursal más cercana por WhatsApp.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E31E24;--navy:#1B3360;--bg:#f5f6f8;--card:#fff;--text:#14181f;--muted:#5b6475;--line:#e3e6ec;--ok:#1aa34a;--wa:#25D366}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+.logo{display:inline-flex;flex-direction:column;gap:3px;font-weight:900;letter-spacing:1px;font-size:22px;line-height:1}
+.logo span{color:#fff;padding:4px 12px}.logo .s{background:var(--red)}.logo .m{background:var(--navy)}
+header{background:#fff;border-bottom:1px solid var(--line);padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+header small{color:var(--muted);font-size:13px}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0f1f3d 60%,var(--red) 140%);color:#fff;padding:48px 16px 90px;text-align:center}
+.hero h1{font-size:clamp(28px,6vw,46px);font-weight:900;line-height:1.1;max-width:760px;margin:0 auto 14px}
+.hero h1 em{font-style:normal;color:#ffd23f}
+.hero p{opacity:.9;max-width:560px;margin:0 auto 20px;font-size:17px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.badges span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:99px;font-size:13px}
+.wrap{max-width:620px;margin:-60px auto 40px;padding:0 16px}
+.card{background:var(--card);border-radius:18px;box-shadow:0 12px 40px rgba(20,30,60,.15);padding:26px 22px}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--navy));transition:width .35s}
+.step-n{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+h2{font-size:22px;margin:4px 0 6px;font-weight:800}
+.hint{color:var(--muted);font-size:14px;margin-bottom:16px}
+.opts{display:grid;gap:10px}
+.opt{border:2px solid var(--line);background:#fff;border-radius:12px;padding:14px 16px;text-align:left;font:inherit;font-size:16px;cursor:pointer;display:flex;gap:12px;align-items:center;transition:.15s}
+.opt:hover{border-color:var(--navy);transform:translateY(-1px)}
+.opt .ic{font-size:22px}.opt small{display:block;color:var(--muted);font-size:13px}
+input{width:100%;border:2px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:16px;margin-bottom:10px}
+input:focus{outline:none;border-color:var(--navy)}
+.btn{width:100%;border:0;border-radius:12px;padding:16px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;background:var(--red);color:#fff}
+.btn.wa{background:var(--wa)}.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line);font-weight:600;font-size:15px;margin-top:10px}
+.back{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;cursor:pointer;margin-top:14px}
+.res-tag{display:inline-block;padding:6px 12px;border-radius:99px;font-weight:800;font-size:13px;margin-bottom:10px}
+.t-a{background:#e5f7ec;color:var(--ok)}.t-b{background:#fff4dc;color:#a86b00}.t-c{background:#fde8e8;color:var(--red)}
+.branch{border:2px solid var(--line);border-radius:12px;padding:14px;margin:14px 0}
+.branch b{font-size:17px}.branch small{color:var(--muted)}
+ul.tips{margin:10px 0 16px 18px;color:var(--muted);font-size:14px}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:620px;margin:0 auto 40px;padding:0 16px;text-align:center}
+.trust div{background:#fff;border-radius:14px;padding:16px 8px;border:1px solid var(--line)}
+.trust b{display:block;font-size:22px;color:var(--navy);font-weight:900}.trust span{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 40px}
+.fade{animation:f .3s ease}@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.jpg" alt="Super Motos" style="height:52px;display:block">
+  <small>Prado · Cerro · Cerro 2</small>
+</header>
+
+<section class="hero">
+  <h1><em>Tu moto</em> está más cerca de lo que pensás</h1>
+  <p>Respondé unas preguntas rápidas (menos de 1 minuto) y te conectamos por WhatsApp con un asesor de la sucursal más cercana, con tu plan ya armado.</p>
+  <div class="badges"><span>✔ Financiación con financieras y bancos</span><span>✔ Contado y tarjeta</span><span>✔ +212 mil seguidores</span></div>
+</section>
+
+<main class="wrap"><div class="card" id="app"></div></main>
+
+<section class="trust">
+  <div><b>+212K</b><span>seguidores en Instagram</span></div>
+  <div><b>3</b><span>sucursales en Montevideo</span></div>
+  <div><b>🔜</b><span>Ciudad de la Costa</span></div>
+</section>
+<footer>Super Motos · Concesionario de motocicletas · Financiación sujeta a aprobación de la financiera o banco.</footer>
+
+<script>
+/* ====== CONFIGURACIÓN ======
+   Confirmar coordenadas exactas de cada sucursal (Google Maps → clic derecho → copiar coordenadas).
+   Para activar Ciudad de la Costa: poner active:true y cargar su WhatsApp. */
+const BRANCHES = [
+  {id:'prado',  name:'Sucursal Prado',   wa:'59895575754', lat:-34.8570, lng:-56.2030, active:true},
+  {id:'cerro',  name:'Sucursal Cerro',   wa:'59895952333', lat:-34.8880, lng:-56.2580, active:true},
+  {id:'cerro2', name:'Sucursal Cerro 2', wa:'59894160260', lat:-34.8760, lng:-56.2630, active:true},
+  {id:'costa',  name:'Sucursal Ciudad de la Costa', wa:'', lat:-34.8220, lng:-55.9600, active:false},
+];
+// Zona elegida → sucursal (fallback si no comparte ubicación)
+const ZONES = [
+  {label:'Cerro / Casabó / La Teja / Paso de la Arena', b:'cerro'},
+  {label:'Belvedere / Nuevo París / Santiago Vázquez', b:'cerro2'},
+  {label:'Prado / Sayago / Colón / Peñarol / Lezica', b:'prado'},
+  {label:'Centro / Cordón / Pocitos / resto de Montevideo', b:'prado'},
+  {label:'Ciudad de la Costa / Canelones', b:'costa'},
+  {label:'Interior del país', b:'prado'},
+];
+
+const Q = [
+ {k:'uso', t:'¿Para qué vas a usar la moto?', h:'Así te recomendamos el modelo justo.', o:[
+   ['🛵','Ir al trabajo / moverme por la ciudad','uso diario',2],
+   ['📦','Trabajar (delivery, mandados)','herramienta de trabajo',3],
+   ['🏍️','Paseo / ruta / gusto personal','paseo',1],
+   ['🚜','Cuatriciclo / campo','cuatriciclo',1]]},
+ {k:'tipo', t:'¿Buscás una moto 0 km o usada?', h:'Tenemos las dos opciones.', o:[
+   ['✨','0 km','0 km',1],
+   ['🔄','Usada','usada',1],
+   ['🤷','Me da igual, quiero la mejor opción','0 km o usada',1]]},
+ {k:'pago', t:'¿Cómo pensás pagarla?', h:'Trabajamos con financieras y bancos (no financiamos de la casa).', o:[
+   ['💵','Contado / transferencia','contado',5],
+   ['💳','Tarjeta de crédito en cuotas','tarjeta',4],
+   ['🏦','Financiación con financiera o banco','financiera',2],
+   ['🤔','No sé todavía, quiero asesoramiento','a definir',1]]},
+ {k:'ingresos', t:'¿Cómo comprobás tus ingresos?', h:'Las financieras lo piden para aprobar el crédito.', when:a=>a.pago!=='contado', o:[
+   ['📄','Recibo de sueldo (+6 meses en el trabajo)','recibo +6m',4],
+   ['📄','Recibo de sueldo (menos de 6 meses)','recibo -6m',2],
+   ['🧾','Trabajo independiente / monotributo / BPS','independiente',2],
+   ['🚫','No tengo cómo comprobar ingresos','sin comprobante',-3]]},
+ {k:'clearing', t:'¿Estás al día con tus créditos?', h:'Respuesta confidencial. Nos ayuda a ver qué opción te aprueban.', when:a=>a.pago==='financiera'||a.pago==='a definir', o:[
+   ['✅','Sí, estoy al día / limpio','al día',4],
+   ['⚠️','Tuve atrasos pero ya regularicé','regularizado',1],
+   ['❌','Estoy en el Clearing','en clearing',-4],
+   ['🤷','No sé','no sabe',0]]},
+ {k:'entrega', t:'¿Tenés entrega inicial?', h:'Una entrega baja la cuota y acelera la aprobación.', when:a=>a.pago!=='contado', o:[
+   ['💪','Sí, más de US$ 500','entrega +500',3],
+   ['👍','Algo, menos de US$ 500','entrega -500',2],
+   ['🙅','No, sin entrega','sin entrega',0]]},
+ {k:'cuando', t:'¿Cuándo querés tener tu moto?', h:'', o:[
+   ['🔥','Esta semana','esta semana',5],
+   ['📅','Este mes','este mes',3],
+   ['⏳','En 1–3 meses','1-3 meses',1],
+   ['👀','Solo estoy mirando precios','mirando',-1]]},
+];
+
+const A = {}, S = {}; let i = 0, hist = [], lead = {};
+const app = document.getElementById('app');
+const flow = () => Q.filter(q=>!q.when||q.when(A));
+
+function render(){
+  const f = flow(), total = f.length + 2;
+  if(i < f.length) return renderQ(f[i], i+1, total);
+  if(i === f.length) return renderZone(total);
+  if(i === f.length+1) return renderName(total);
+  renderResult();
+}
+function head(n,total){return `<div class="bar"><i style="width:${(n-1)/total*100}%"></i></div><div class="step-n">Paso ${n} de ${total}</div>`}
+function backBtn(){return hist.length?`<button class="back" onclick="goBack()">← Volver</button>`:''}
+
+function renderQ(q,n,total){
+  app.innerHTML = `<div class="fade">${head(n,total)}<h2>${q.t}</h2><p class="hint">${q.h}</p><div class="opts">${
+    q.o.map((o,j)=>`<button class="opt" onclick="pick('${q.k}',${j})"><span class="ic">${o[0]}</span><span>${o[1]}</span></button>`).join('')
+  }</div>${backBtn()}</div>`;
+}
+function pick(k,j){const q=Q.find(x=>x.k===k);A[k]=q.o[j][2];S[k]=q.o[j][3];hist.push(i);i++;render()}
+function goBack(){const p=hist.pop();const f=flow();if(p<f.length){delete A[f[p].k];delete S[f[p].k]}i=p;render()}
+
+function renderZone(total){
+  app.innerHTML = `<div class="fade">${head(total-1,total)}<h2>¿Dónde estás?</h2><p class="hint">Te conectamos con la sucursal más cercana.</p>
+  <button class="btn" onclick="geo()">📍 Usar mi ubicación</button>
+  <p class="hint" style="margin:16px 0 8px;text-align:center">o elegí tu zona</p>
+  <div class="opts">${ZONES.map((z,j)=>`<button class="opt" onclick="zone(${j})"><span>${z.label}</span></button>`).join('')}</div>${backBtn()}</div>`;
+}
+function dist(a,b,c,d){const r=x=>x*Math.PI/180,R=6371,dl=r(c-a),dn=r(d-b);const h=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function geo(){
+  if(!navigator.geolocation) return alert('Tu navegador no permite ubicación, elegí tu zona.');
+  app.querySelector('.btn').textContent='Buscando…';
+  navigator.geolocation.getCurrentPosition(p=>{
+    const {latitude:la,longitude:lo}=p.coords;
+    const all=BRANCHES.map(b=>({...b,km:dist(la,lo,b.lat,b.lng)})).sort((x,y)=>x.km-y.km);
+    lead.zona=`GPS (${all[0].km.toFixed(1)} km de ${all[0].name})`;
+    lead.nearest=all[0]; lead.branch=all.find(b=>b.active); lead.km=lead.branch.km;
+    hist.push(i);i++;render();
+  },()=>{alert('No pudimos obtener tu ubicación, elegí tu zona.');renderZone(flow().length+2)},{timeout:8000});
+}
+function zone(j){
+  const b=BRANCHES.find(x=>x.id===ZONES[j].b);
+  lead.zona=ZONES[j].label; lead.nearest=b; lead.branch=b.active?b:BRANCHES.find(x=>x.id==='prado'); lead.km=null;
+  hist.push(i);i++;render();
+}
+function renderName(total){
+  app.innerHTML = `<div class="fade">${head(total,total)}<h2>Último paso 🙌</h2><p class="hint">¿Cómo te llamás? Así el asesor te atiende por tu nombre.</p>
+  <input id="nm" placeholder="Tu nombre" autocomplete="given-name">
+  <button class="btn" onclick="finish()">Ver mi resultado →</button>${backBtn()}</div>`;
+  document.getElementById('nm').focus();
+}
+function finish(){
+  const v=document.getElementById('nm').value.trim(); if(!v) return document.getElementById('nm').focus();
+  lead.nombre=v; hist.push(i); i++; render();
+}
+
+function score(){
+  let s=Object.values(S).reduce((a,b)=>a+b,0);
+  const blocked = A.pago==='financiera' && (A.clearing==='en clearing' || A.ingresos==='sin comprobante');
+  const tier = blocked ? 'C' : s>=14 ? 'A' : s>=8 ? 'B' : 'C';
+  return {s,tier,blocked};
+}
+
+function renderResult(){
+  const {s,tier,blocked}=score(), b=lead.branch;
+  let title, body, tips=[];
+  if(tier==='A'){title=`¡${lead.nombre}, tenés todo para llevarte tu moto ya!`;body='Por tu perfil, las chances de aprobación son muy altas. Un asesor te va a armar el plan y reservar tu moto.';
+    tips=['Traé cédula vigente','Recibo de sueldo o comprobante de ingresos','Constancia de domicilio (factura UTE/OSE/Antel)'];}
+  else if(blocked){title=`${lead.nombre}, igual tenemos opciones para vos`;body='Las financieras suelen pedir ingresos comprobables y no estar en el Clearing. Te mostramos alternativas que sí funcionan:';
+    tips=['Comprar con tarjeta de crédito (propia o de un familiar)','Sumar un garante / codeudor con recibo de sueldo','Juntar una entrega mayor y financiar menos'];}
+  else if(tier==='B'){title=`${lead.nombre}, estás muy cerca de tu moto`;body='Un asesor te va a mostrar qué financiera te conviene y cuánto quedaría la cuota.';
+    tips=['Tené a mano cédula y comprobante de ingresos','Si podés sumar entrega, la cuota baja'];}
+  else {title=`${lead.nombre}, te mandamos precios y promos`;body='Un asesor te pasa los modelos y promociones vigentes para que compares tranquilo.';}
+
+  const costa = lead.nearest && lead.nearest.id==='costa' && !lead.nearest.active
+    ? `<p class="hint">📢 ¡Pronto abrimos en <b>Ciudad de la Costa</b>! Mientras tanto te atiende ${b.name}.</p>`:'';
+  const msg = buildMsg(tier,s);
+  const url = `https://wa.me/${b.wa}?text=${encodeURIComponent(msg)}`;
+  track(tier,s,b);
+
+  app.innerHTML = `<div class="fade"><div class="bar"><i style="width:100%"></i></div>
+   <span class="res-tag t-${tier.toLowerCase()}">${tier==='A'?'Pre-calificado ✔':tier==='B'?'Buen perfil':'Te asesoramos'}</span>
+   <h2>${title}</h2><p class="hint">${body}</p>${tips.length?`<ul class="tips">${tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}
+   <div class="branch">Te atiende: <b>${b.name}</b>${lead.km!=null?` <small>· a ${lead.km.toFixed(1)} km</small>`:''}</div>${costa}
+   <a href="${url}" target="_blank" rel="noopener"><button class="btn wa">💬 Hablar ahora por WhatsApp</button></a>
+   <button class="btn ghost" onclick="restart()">Empezar de nuevo</button></div>`;
+}
+function buildMsg(tier,s){
+  const label={A:'🔥 CALIENTE',B:'🟡 TIBIO',C:'🔵 FRÍO'}[tier];
+  return `Hola! Soy ${lead.nombre}, vengo de la web y quiero mi moto 🏍️
+—
+Busca: ${A.tipo}
+Uso: ${A.uso}
+Pago: ${A.pago}${A.ingresos?`\nIngresos: ${A.ingresos}`:''}${A.clearing?`\nCréditos: ${A.clearing}`:''}${A.entrega?`\nEntrega: ${A.entrega}`:''}
+Cuándo: ${A.cuando}
+Zona: ${lead.zona}
+—
+[Lead ${label} · score ${s}]`;
+}
+function restart(){for(const k in A)delete A[k];for(const k in S)delete S[k];i=0;hist=[];lead={};render()}
+
+/* Tracking: si cargan Meta Pixel / GA4, se envía el evento automáticamente */
+function track(tier,s,b){
+  const d={lead_tier:tier,lead_score:s,branch:b.id,payment:A.pago};
+  try{window.fbq&&fbq('track','Lead',d)}catch(e){}
+  try{window.gtag&&gtag('event','generate_lead',d)}catch(e){}
+}
+render();
+</script>
+</body>
+</html>
